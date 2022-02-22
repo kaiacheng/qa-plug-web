@@ -2,16 +2,114 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Plug TEST App</title>
 </head>
 
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
+    <main>
+    <h1>Plug TEST</h1>
+<h2>Contact Form</h2>
+
+<form id="contact-form">
+    Name<br>
+    <input type="text" name="name" required>
+    <br>
+    Plug<br>
+    <input type="text" name="plug" required>
+    <br>
+    <br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<div id="success-message" style="display: none">
+    <h3>Message Sent!</h3>
+    <p>
+        Name:
+        <b id="message1">...</b>
+    </p>
+    <p>
+        pluginput:
+        <b id="message2">...</b>
+    </p> 
+    <p>
+        plugname:
+        <b id="message3">...</b>
+    </p>
+    <p>
+        plugclass:
+        <b id="message4">...</b>
+    </p>  	
+    <p>
+        plugtest:
+        <b id="message5">...</b>
+    </p>
+    <p>
+        plugmemo:
+        <b id="message6">...</b>
+    </p> 
+    <p>
+        Created_On:
+        <b id="message7">...</b>
+    </p>
+    <p>
+        sn:
+        <b id="message8">...</b>
+    </p>  		
+    <p>
+        other:
+        <b id="message9">...</b>
+    </p>  		
+</div>
+
+<script>
+    var contactForm = document.getElementById("contact-form");
+    var successMessage = document.getElementById("success-message");
+    
+    contactForm.onsubmit = function(event) {
+        event.preventDefault(); // Don't let the browser submit the form.
+        var payload = {};
+    
+        // Build JSON key-value pairs using the form fields.
+        contactForm.querySelectorAll("input, textarea").forEach(field => {
+            payload[field.name] = field.value;
+        });
+    
+        // Post the payload to the contact endpoint.
+        fetch("/api/HttpTrigger1", {
+            method: 'post',
+            body: JSON.stringify(payload)
+        }).then(resp => {
+            if (!resp.ok) {
+                console.error(resp);
+                return;
+            }
+            // Display success message.
+            successMessage.style.display = "block";
+            console.log(resp);
+            return resp.json(); 
+        })
+        .then(json =>  {
+            console.log(json);
+            document.querySelector("#message1").innerHTML = json['plugdata'][0]['name'];
+            document.querySelector("#message2").innerHTML = json['plugdata'][0]['pluginput'];
+            document.querySelector("#message3").innerHTML = json['plugdata'][0]['plugname'];
+            document.querySelector("#message4").innerHTML = json['plugdata'][0]['plugclass'];
+            document.querySelector("#message5").innerHTML = json['plugdata'][0]['plugtest'];
+            document.querySelector("#message6").innerHTML = json['plugdata'][0]['plugmemo'];
+            document.querySelector("#message7").innerHTML = json['plugdata'][0]['Created_On'];
+            document.querySelector("#message8").innerHTML = json['plugdata'][0]['sn'];	
+            document.querySelector("#message9").innerHTML = json['Messages'];				
+        })
+
+        ;
+    }
+</script>    
+
+
+
 </body>
 
 </html>
