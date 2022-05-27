@@ -36,7 +36,24 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         sqlConnection = getSqlConnection(sqlConnectionString)
     except:
         messages.append('sqlConnection error.')
-        return generateHttpResponse(ingredients, messages, 400)		
+        return generateHttpResponse(ingredients, messages, 400)	
+    try:	
+        a = 'refresh'
+        if turkeyS == a :
+            plugrecord = getIngredients2(sqlConnection)
+            p=0
+            pc=0
+            for item in plugrecord:
+                p = item['sn'] 
+            p8 = 'reset'
+            p +=1
+            getIngredients3(sqlConnection, p, turkeyS, p8, p8, p8, p8,p8,pc)
+            messages.append('refresh SN  .')
+            return generateHttpResponse(ingredients, messages, 200)			
+		
+    except:
+        messages.append('plugcount error.')
+        return generateHttpResponse(ingredients, messages, 400)	
     try:	
         avaiotdata = getIngredients4(sqlConnection)
         logging.info('avaiotdata: %s', avaiotdata) 		
@@ -59,14 +76,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info('plugdata2: %s', p3)		
     except:
         messages.append('plugname error.')
-        return generateHttpResponse(plugdata, messages, 400)		
+        return generateHttpResponse(plugdata, messages, 401)		
     try:	
         plugrecord = getIngredients2(sqlConnection)
         #p = json.loads(plugrecord)
         p=0
+        pc=0
         for item in plugrecord:
             p = item['sn'] 
+            pc = item['plugcount'] 
         p +=1
+        pc +=1
         logging.info('plugrecord: %s', str(p)) 
         p6 = 0
         p7 = 'fault'
@@ -83,8 +103,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         p8 = p2 +'or'+p3
         p9 = p1 +'_'+p4
         logging.info('plugrecord1: %s', date1)   
-        getIngredients3(sqlConnection, p, turkeyS, p10, p8, p5, p7, p9)		
-        plugrecord = getIngredients2(sqlConnection)		
+        getIngredients3(sqlConnection, p, turkeyS, p10, p8, p5, p7, p9,pc)		
+        plugrecord = getIngredients2(sqlConnection)
+        b = 'fault' 
+        if p7 == b :
+            getIngredients6(sqlConnection, turkeyS, p10, p8, p5, p7, p9, p)
+            		
     except:
         messages.append('plugrecord error.')
         return generateHttpResponse(plugrecord, messages, 400)	
@@ -140,11 +164,11 @@ def getIngredients2(sqlConnection):
     sqlCursor.commit()
     sqlCursor.close()
     return results		
-def getIngredients3(sqlConnection, turkey1, turkey2, turkey3, turkey4, turkey5, turkey6, turkey7):
+def getIngredients3(sqlConnection, turkey1, turkey2, turkey3, turkey4, turkey5, turkey6, turkey7, turkey8):
     logging.info('getting plugrecord4')
 
     sqlCursor = sqlConnection.cursor()
-    go1 = "EXEC plugrecord4 "+str(turkey1)+" , "+"'"+turkey2+"'"+" , "+"'"+turkey3+"'"+" ,"+"'"+turkey4+"'"+" ,"+"'"+turkey5+"'"+" , "+"'"+turkey6+"'"+" , "+"'"+turkey7+"'"
+    go1 = "EXEC plugrecord4 "+str(turkey1)+" , "+"'"+turkey2+"'"+" , "+"'"+turkey3+"'"+" ,"+"'"+turkey4+"'"+" ,"+"'"+turkey5+"'"+" , "+"'"+turkey6+"'"+" , "+"'"+turkey7+"'"+", "+"'"+str(turkey8)+"'"
     logging.info('plugrecord: %s', go1) 
     sqlCursor.execute(go1)
     sqlCursor.commit()
@@ -159,3 +183,14 @@ def getIngredients4(sqlConnection):
     sqlCursor.commit()
     sqlCursor.close()
     return results	
+
+def getIngredients6(sqlConnection,turkey2, turkey3, turkey4, turkey5, turkey6, turkey7, turkey1):
+    logging.info('getting plugng4')
+
+    sqlCursor = sqlConnection.cursor()
+    go1 = "EXEC plugng4 "+turkey2+" , "+"'"+turkey3+"'"+" , "+"'"+turkey4+"'"+" ,"+"'"+turkey5+"'"+" ,"+"'"+turkey6+"'"+", "+"'"+turkey7+"'"+"   , "+"'"+str(turkey1)+"'"
+    logging.info('plugng: %s', go1) 
+    sqlCursor.execute(go1)
+    sqlCursor.commit()
+    sqlCursor.close()
+    return		
