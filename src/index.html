@@ -175,6 +175,7 @@
             document.querySelector("#message7").innerHTML = json['plugdata'][0]['Created_On'];
             document.querySelector("#message8").innerHTML = json['plugdata'][0]['plugcount'];
             if (json['plugdata'][0]['plugtest'] == 'fault') {		tx = 0;ty = 100;	}
+            if (json['plugdata'][0]['plugtest'] == 'ok') {  tx = 100;ty = 0; }
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
             type: 'doughnut',
